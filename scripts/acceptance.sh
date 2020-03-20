@@ -23,7 +23,7 @@ REQUIRED_SYSTEM_COMMANDS=(
     "kind"
     "kubectl"
     "python3"
-    "pip"
+    "pip3"
     "virtualenv"
 )
 
@@ -109,7 +109,7 @@ fi
 set_shell_debug_level 2
 if [[ ! -d ${ROBOT_VENV_DIR} ]]; then
     virtualenv -p $(which python3) ${ROBOT_VENV_DIR}
-    pip install ${ROBOT_PY_REQUIRES}
+    pip3 install ${ROBOT_PY_REQUIRES}
 fi
 
 # Run Robot Framework, output
