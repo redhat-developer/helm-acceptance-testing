@@ -53,6 +53,7 @@ _completionTests_verifyCompletion() {
 
    local cmdLine=$1
    local expected=$2
+   local currentFailure=0
 
    result=$(_completionTests_complete "${cmdLine}")
 
@@ -69,6 +70,7 @@ _completionTests_verifyCompletion() {
            ([ $expectedFailure = "ZFAIL" ] && [ $SHELL_TYPE = "zsh" ]); then
       if [ "$result" = "$expected" ]; then
          _completionTests_TEST_FAILED=1
+         currentFailure=1
          echo "UNEXPECTED SUCCESS: \"$cmdLine\" completes to \"$resultOut\""
       else
          echo "$expectedFailure: \"$cmdLine\" should complete to \"$expected\" but we got \"$resultOut\""
@@ -77,12 +79,11 @@ _completionTests_verifyCompletion() {
       echo "SUCCESS: \"$cmdLine\" completes to \"$resultOut\""
    else
       _completionTests_TEST_FAILED=1
-      echo "FAIL: \"$cmdLine\" should complete to \"$expected\" but we got \"$result\""
+      currentFailure=1
+      echo "ERROR: \"$cmdLine\" should complete to \"$expected\" but we got \"$result\""
    fi
 
-   # Return the global result each time.  This allows for the very last call to
-   # this method to return the correct success or failure code for the entire script
-   return $_completionTests_TEST_FAILED
+   return $currentFailure
 }
 
 _completionTests_disable_sort() {
@@ -95,16 +96,24 @@ _completionTests_enable_sort() {
 
 _completionTests_sort() {
    if [ -n "${_completionTests_DISABLE_SORT}" ]; then
-      echo "$1"
+      # We use printf instead of echo as the $1 could be -n which would be
+      # interpreted as an argument to echo
+      printf "%s\n" "$1"
    else
-      echo $(echo "$1" | tr ' ' '\n' | sort -n)
+      # We use printf instead of echo as the $1 could be -n which would be
+      # interpreted as an argument to echo
+      printf "%s\n" "$1" | sed -e 's/^ *//' -e 's/ *$//' | tr ' ' '\n' | sort -n | tr '\n' ' '
    fi
 }
 
 # Find the completion function associated with the binary.
-# $1 is the name of the binary for which completion was triggered.
+# $1 is the first argument of the line to complete which allows
+# us to find the existing completion function name.
 _completionTests_findCompletionFunction() {
-    local out=($(complete -p $1))
+    binary=$(basename $1)
+    # The below must work for both bash and zsh
+    # which is why we use grep as complete -p $binary only works for bash
+    local out=($(complete -p | grep ${binary}$))
     local returnNext=0
     for i in ${out[@]}; do
        if [ $returnNext -eq 1 ]; then
@@ -117,6 +126,7 @@ _completionTests_findCompletionFunction() {
 
 _completionTests_complete() {
    local cmdLine=$1
+
 
    # Set the bash completion variables which are
    # used for both bash and zsh completion
@@ -132,10 +142,20 @@ _completionTests_complete() {
    [ "${cmdLine: -1}" = " " ] && COMP_CWORD=${#COMP_WORDS[@]}
 
    # Call the completion function associated with the binary being called.
-   eval $(_completionTests_findCompletionFunction ${COMP_WORDS[0]})
+   # Also redirect stderr to stdout so that the tests fail if anything is printed
+   # to stderr.
+   eval $(_completionTests_findCompletionFunction ${COMP_WORDS[0]}) 2>&1
 
    # Return the result of the completion.
-   echo "${COMPREPLY[@]}"
+   # We use printf instead of echo as the first completion could be -n which
+   # would be interpreted as an argument to echo
+   printf "%s\n" "${COMPREPLY[@]}"
+}
+
+_completionTests_exit() {
+   # Return the global result each time.  This allows for the very last call to
+   # this method to return the correct success or failure code for the entire script
+   return $_completionTests_TEST_FAILED
 }
 
 # compopt, which is only available for bash 4, I believe,
@@ -154,6 +174,11 @@ if [ ! -z "$BASH_VERSION" ];then
    echo "===================================================="
    echo "Running completions tests on $(uname) with bash $BASH_VERSION"
    echo "===================================================="
+
+   # Enable aliases to work even though we are in a script (non-interactive shell).
+   # This allows to test completion with aliases.
+   # Only needed for bash, zsh does this automatically.
+   shopt -s expand_aliases
 
    bashCompletionScript="/usr/share/bash-completion/bash_completion"
    if [ $(uname) = "Darwin" ]; then
