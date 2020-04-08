@@ -31,13 +31,13 @@ Library           ../lib/ClusterProvider.py
 Library           ../lib/Kubectl.py
 Library           ../lib/Helm.py
 Library           ../lib/Sh.py
-Suite Setup       Suite Setup
+#Suite Setup       Suite Setup
 Suite Teardown    Suite Teardown
 
 
 *** Test Cases ***
-#Helm works with Kubernetes 1.16.1
-#    Test Helm on Kubernetes version   1.16.1
+Helm works with Kubernetes 1.16.1
+    Test Helm on Kubernetes version   1.16.1
 
 #Helm works with Kubernetes 1.15.3
 #    Test Helm on Kubernetes version   1.15.3
@@ -49,7 +49,14 @@ Helm works with Kubernetes
         Test Helm on Kubernetes version   ${version}
     END
 
+Helm work with provided kubecontext
+    Test Helm on provided kubecontext
+
 *** Keyword ***
+Test Helm on provided kubecontext
+    Verify --wait flag works as expected
+
+
 Test Helm on Kubernetes version
     Require cluster  True
 
@@ -73,7 +80,7 @@ Create test cluster with kube version
 
 Verify --wait flag works as expected
     # Install nginx chart in a good state, using --wait flag
-    Sh.Run  helm delete wait-flag-good
+#    Sh.Run  helm delete wait-flag-good
     Helm.Install test chart    wait-flag-good    nginx   --wait --timeout=60s
     Helm.Return code should be  0
 
