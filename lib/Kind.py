@@ -18,9 +18,10 @@ LAST_CLUSTER_NAME = 'UNSET'
 LAST_CLUSTER_EXISTING = False
 
 def kind_auth_wrap(cmd):
-    c = 'export KUBECONFIG="$(kind get kubeconfig-path'
-    c += ' --name="'+LAST_CLUSTER_NAME+'")"'
-    return c+' && '+cmd
+    # c = 'export KUBECONFIG="$(kind get kubeconfig-path'
+    # c += ' --name="'+LAST_CLUSTER_NAME+'")"'
+    # return c+' && '+cmd
+    return 'export KUBECONFIG=$HOME/.kube/config &&' + cmd
 
 class Kind(common.CommandRunner):
     def create_test_cluster_with_kubernetes_version(self, kube_version):
