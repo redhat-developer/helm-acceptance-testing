@@ -34,9 +34,25 @@ export -f set_shell_debug_level
 set_shell_debug_level 2
 
 BINARY_NAME=helm
-BINARY_ROOT=${ROBOT_HELM_PATH:-${SCRIPT_DIR}/../../../helm/bin}
-BINARY_PATH_DOCKER=${BINARY_ROOT}/../_dist/linux-amd64
+HELM_DIR=${SCRIPT_DIR}/../../.acceptance
+HELM_REPO=${HELM_DIR}/helm
+BINARY_ROOT=${HELM_REPO}/bin
+BINARY_PATH_DOCKER=${HELM_REPO}/_dist/linux-amd64
 BINARY_PATH_LOCAL=${BINARY_ROOT}
+
+if [ -d ${HELM_REPO} ]; then
+    (cd ${HELM_REPO} && make build build-cross) &> /dev/null
+    exit_code=$?
+    if [ $exit_code -ne 0 ]; then
+        exit $exit_code;
+    fi
+else
+    (cd ${HELM_DIR} && git clone https://github.com/redhat-developer/helm.git && cd helm && make build build-cross) &> /dev/null
+    exit_code=$?
+    if [ $exit_code -ne 0 ]; then
+        exit $exit_code;
+    fi
+fi 
 
 if [ -z $(which docker) ]; then
   echo "Missing 'docker' client which is required for these tests";
@@ -46,7 +62,7 @@ fi
 # Only use the -d flag for mktemp as many other flags don't
 # work on every plateform
 export COMP_DIR=$(mktemp -d ${ROBOT_OUTPUT_DIR}/helm-acceptance-completion.XXXXXX)
-trap "rm -rf ${COMP_DIR}" EXIT
+trap "rm -rf ${COMP_DIR} ${HELM_REPO}" EXIT
 
 COMP_SCRIPT_NAME=completionTests.sh
 COMP_SCRIPT=${COMP_DIR}/${COMP_SCRIPT_NAME}
