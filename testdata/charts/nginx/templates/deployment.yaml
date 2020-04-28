@@ -76,7 +76,7 @@ spec:
               - "echo bar | grep {{ if .Values.breakme }}foo{{ else }}bar{{ end }}"
 
 ---
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "nginx.fullname" . }}-v1beta2
