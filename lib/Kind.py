@@ -21,7 +21,7 @@ def kind_auth_wrap(cmd):
     # c = 'export KUBECONFIG="$(kind get kubeconfig-path'
     # c += ' --name="'+LAST_CLUSTER_NAME+'")"'
     # return c+' && '+cmd
-    return 'export KUBECONFIG=$HOME/.kube/config &&' + cmd
+    return 'export KUBECONFIG=$KUBECONFIG &&' + cmd
 
 class Kind(common.CommandRunner):
     def create_test_cluster_with_kubernetes_version(self, kube_version):

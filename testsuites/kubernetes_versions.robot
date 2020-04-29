@@ -35,14 +35,14 @@ Library           ../lib/Sh.py
 Suite Teardown    Suite Teardown
 
 *** Test Cases ***
-Helm works with Kubernetes 1.16.1
-    Test Helm on Kubernetes version   1.16.1
-
-Helm works with Kubernetes 1.15.3
-    Test Helm on Kubernetes version   1.15.3
-
-Helm works with Kubernetes 1.14.6
-    Test Helm on Kubernetes version   1.14.6
+#Helm works with Kubernetes 1.16.1
+#    Test Helm on Kubernetes version   1.16.1
+#
+#Helm works with Kubernetes 1.15.3
+#    Test Helm on Kubernetes version   1.15.3
+#
+#Helm works with Kubernetes 1.14.6
+#    Test Helm on Kubernetes version   1.14.6
 
 Helm work with provided kubecontext
     Test Helm on provided kubecontext
