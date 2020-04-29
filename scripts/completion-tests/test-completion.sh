@@ -56,20 +56,6 @@ esac
 HELM_DIR=${SCRIPT_DIR}/../../.acceptance
 HELM_REPO=${HELM_DIR}/helm
 
-if [ -d ${HELM_REPO} ]; then
-    (cd ${HELM_REPO} && make build build-cross) &> /dev/null
-    exit_code=$?
-    if [ $exit_code -ne 0 ]; then
-        exit $exit_code;
-    fi
-else
-    (cd ${HELM_DIR} && git clone https://github.com/redhat-developer/helm.git && cd helm && make build build-cross) &> /dev/null
-    exit_code=$?
-    if [ $exit_code -ne 0 ]; then
-        exit $exit_code;
-    fi
-fi 
-
 if [ -z $(which docker) ]; then
   echo "Missing 'docker' client which is required for these tests";
   exit 2;
@@ -78,7 +64,7 @@ fi
 # Only use the -d flag for mktemp as many other flags don't
 # work on every plateform
 export COMP_DIR=$(mktemp -d ${ROBOT_OUTPUT_DIR}/helm-acceptance-completion.XXXXXX)
-trap "rm -rf ${COMP_DIR} ${HELM_REPO}" EXIT
+trap "rm -rf ${COMP_DIR}" EXIT
 
 COMP_SCRIPT_NAME=completionTests.sh
 COMP_SCRIPT=${COMP_DIR}/${COMP_SCRIPT_NAME}
