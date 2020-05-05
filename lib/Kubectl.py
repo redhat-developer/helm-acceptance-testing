@@ -19,3 +19,8 @@ class Kubectl(common.CommandRunner):
         cmd += ' | grep ^'+pod_prefix+' | awk \'{print $2 "--" $3}\''
         cmd += ' | grep -E "^([1-9][0-9]*)/\\1--Running" | wc -l` == '+num_expected+' ]'
         self.run_command(kind_auth_wrap(cmd))
+
+    def deamon_set_pods_with_prefix(self, namespace,pod_prefix):
+        cmd = 'kubectl get nodes | grep Ready | wc -l'
+        self.run_command(kind_auth_wrap(cmd))
+        self.pods_with_prefix_are_running(namespace, pod_prefix, self.stdout)
