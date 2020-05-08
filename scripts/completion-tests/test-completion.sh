@@ -34,8 +34,8 @@ export -f set_shell_debug_level
 set_shell_debug_level 2
 
 BINARY_NAME=helm
-BINARY_ROOT=${ROBOT_HELM_PATH:-${SCRIPT_DIR}/../../../helm/bin}
-BINARY_PATH_DOCKER=${BINARY_ROOT}/../_dist/linux-amd64
+BINARY_ROOT=${ROBOT_HELM_PATH:-$(dirname $(which helm))}
+BINARY_PATH_DOCKER=${BINARY_ROOT}
 BINARY_PATH_LOCAL=${BINARY_ROOT}
 
 if [ -z $(which docker) ]; then
