@@ -34,7 +34,6 @@ fi
 
 set_shell_debug_level 2
 REQUIRED_SYSTEM_COMMANDS=(
-    "kind"
     "kubectl"
     "python3"
     "pip3"
