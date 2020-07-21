@@ -1,11 +1,8 @@
 SHELL = /bin/bash
 
 .PHONY: acceptance
-acceptance: ensure-cluster-setup
+acceptance:
 	@scripts/acceptance.sh
-
-ensure-cluster-setup:
-	@scripts/ensure-cluster-setup.sh
 
 .PHONY: github-actions-ci
 github-actions-ci:
