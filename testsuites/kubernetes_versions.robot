@@ -27,12 +27,13 @@ Documentation     Verify Helm functionality on multiple Kubernetes versions.
 ...
 Library           String
 Library           OperatingSystem
-Library           ../lib/Kind.py
+Library           ../lib/ClusterProvider.py
 Library           ../lib/Kubectl.py
 Library           ../lib/Helm.py
 Library           ../lib/Sh.py
 #Suite Setup       Suite Setup
 Suite Teardown    Suite Teardown
+
 
 *** Test Cases ***
 #Helm works with Kubernetes 1.16.1
@@ -44,14 +45,14 @@ Suite Teardown    Suite Teardown
 #Helm works with Kubernetes 1.14.6
 #    Test Helm on Kubernetes version   1.14.6
 
-Helm work with provided kubecontext
-    Test Helm on provided kubecontext
+Helm works with Kubernetes
+    @{versions} =   Split String    %{CLUSTER_VERSIONS}    ,
+    FOR    ${i}    IN    @{versions}
+        Set Global Variable     ${version}    ${i}
+        Test Helm on Kubernetes version   ${version}
+    END
 
 *** Keyword ***
-Test Helm on provided kubecontext
-    Verify --wait flag works as expected
-
-
 Test Helm on Kubernetes version
     Require cluster  True
 
@@ -64,12 +65,13 @@ Test Helm on Kubernetes version
     # Add new test cases here
     Verify --wait flag works as expected
 
-    Kind.Delete test cluster
+    ClusterProvider.Delete test cluster
+
 
 Create test cluster with kube version
     [Arguments]    ${kube_version}
-    Kind.Create test cluster with Kubernetes version  ${kube_version}
-    Kind.Wait for cluster
+    ClusterProvider.Create test cluster with Kubernetes version  ${kube_version}
+    ClusterProvider.Wait for cluster
     Should pass  kubectl get nodes
     Should pass  kubectl get pods --namespace=kube-system
 
@@ -92,7 +94,7 @@ Verify --wait flag works as expected
 
     Kubectl.Pods with prefix are running    default    wait-flag-good-nginx-ext-    3
     Kubectl.Return code should be   0
-    Kubectl.Deamon Set Pods With Prefix    default    wait-flag-good-nginx-fluentd-es-
+    Kubectl.Deamon Set Pods With Prefix    default    wait-flag-good-nginx-fluentd-es-    
     Kubectl.Return code should be   0
     Kubectl.Pods with prefix are running    default    wait-flag-good-nginx-v1-    3
     Kubectl.Return code should be   0
@@ -123,7 +125,7 @@ Verify --wait flag works as expected
 
     Kubectl.Pods with prefix are running    default    wait-flag-bad-nginx-ext-    3
     Kubectl.Return code should not be   0
-    Kubectl.Pods with prefix are running    default    wait-flag-bad-nginx-fluentd-es-    1
+    Kubectl.Deamon Set Pods With Prefix    default    wait-flag-bad-nginx-fluentd-es-    
     Kubectl.Return code should not be   0
     Kubectl.Pods with prefix are running    default    wait-flag-bad-nginx-v1-    3
     Kubectl.Return code should not be   0
@@ -137,8 +139,8 @@ Verify --wait flag works as expected
     # Delete bad release
     Should pass  helm delete wait-flag-bad
 
-#Suite Setup
-#    Kind.Cleanup all test clusters
+Suite Setup
+    ClusterProvider.Cleanup all test clusters
 
 Suite Teardown
-    Kind.Cleanup all test clusters
+    ClusterProvider.Cleanup all test clusters
