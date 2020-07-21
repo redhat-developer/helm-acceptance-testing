@@ -3,7 +3,6 @@ import os
 from robot.api import logger
 from robot.libraries.BuiltIn import BuiltIn
 
-
 ROBOT_LIBRARY_SCOPE = 'SUITE'
 AUTH_COMMAND = ''
 
