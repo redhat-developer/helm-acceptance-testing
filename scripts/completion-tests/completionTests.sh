@@ -196,16 +196,13 @@ source /dev/stdin <<- EOF
    $(helm completion $SHELL_TYPE)
 EOF
 
-allHelmCommands="completion create dependency env 2to3 get history install lint list package plugin pull push push-artifactory repo rollback search show status template test uninstall upgrade verify version"
-echo "Shell Type: $SHELL_TYPE"
+allHelmCommands="completion create dependency env 2to3 help get history install lint list package plugin pull push push-artifactory repo rollback search show status template test uninstall upgrade verify version"
 if [ "$SHELL_TYPE" = bash ]; then
-    allHelmGlobalFlags="--debug --kube-apiserver --kube-apiserver= --kube-as-group --kube-as-group= --kube-as-user --kube-as-user= --kube-context --kube-context= --kube-token --kube-token= --kubeconfig --kubeconfig= --namespace --namespace= --registry-config --registry-config= --repository-cache --repository-cache= --repository-config --repository-config= -n"
-    allHelmLongFlags="--debug --kube-apiserver --kube-apiserver= --kube-as-group --kube-as-group= --kube-as-user --kube-as-user= --kube-context --kube-context= --kube-token --kube-token= --kubeconfig --kubeconfig= --namespace --namespace= --registry-config --registry-config= --repository-cache --repository-cache= --repository-config --repository-config="
+    allHelmGlobalFlags="--debug --kube-apiserver --kube-apiserver= --kube-as-group --kube-as-group= --kube-as-user --kube-as-user= --kube-ca-file --kube-ca-file= --kube-context --kube-context= --kube-token --kube-token= --kubeconfig --kubeconfig= --namespace --namespace= --registry-config --registry-config= --repository-cache --repository-cache= --repository-config --repository-config= -n"
+    allHelmLongFlags="--debug --kube-apiserver --kube-apiserver= --kube-as-group --kube-as-group= --kube-as-user --kube-as-user= --kube-ca-file --kube-ca-file= --kube-context --kube-context= --kube-token --kube-token= --kubeconfig --kubeconfig= --namespace --namespace= --registry-config --registry-config= --repository-cache --repository-cache= --repository-config --repository-config="
 else
-    # allHelmGlobalFlags="--debug --kube-apiserver --kube-as-group --kube-as-user --kube-context --kube-token --kubeconfig --namespace --registry-config --repository-cache --repository-config -n"
-    allHelmGlobalFlags="--debug --kube-apiserver --kube-apiserver --kube-apiserver --kube-as-group --kube-as-group --kube-as-group --kube-as-user --kube-as-user --kube-as-user --kube-context --kube-context --kube-context --kube-token --kube-token --kube-token --kubeconfig --kubeconfig --kubeconfig --namespace --namespace --namespace --registry-config --registry-config --registry-config --repository-cache --repository-cache --repository-cache --repository-config --repository-config --repository-config -n"
-    # allHelmLongFlags="--debug --kube-apiserver --kube-as-group --kube-as-user --kube-context --kube-token --kubeconfig --namespace --registry-config --repository-cache --repository-config"
-    allHelmLongFlags="--debug --kube-apiserver --kube-apiserver --kube-apiserver --kube-as-group --kube-as-group --kube-as-group --kube-as-user --kube-as-user --kube-as-user --kube-context --kube-context --kube-context --kube-token --kube-token --kube-token --kubeconfig --kubeconfig --kubeconfig --namespace --namespace --namespace --registry-config --registry-config --registry-config --repository-cache --repository-cache --repository-cache --repository-config --repository-config --repository-config"
+    allHelmGlobalFlags="--debug --kube-apiserver --kube-apiserver --kube-apiserver --kube-context --kube-context --kube-context --kube-token --kube-token --kube-token --kubeconfig --kubeconfig --kubeconfig --namespace --namespace --namespace --registry-config --registry-config --registry-config --repository-cache --repository-cache --repository-cache --repository-config --repository-config --repository-config -n"
+    allHelmLongFlags="--debug --kube-apiserver --kube-apiserver --kube-apiserver --kube-context --kube-context --kube-context --kube-token --kube-token --kube-token --kubeconfig --kubeconfig --kubeconfig --namespace --namespace --namespace --registry-config --registry-config --registry-config --repository-cache --repository-cache --repository-cache --repository-config --repository-config --repository-config "
 fi
 
 #####################
@@ -277,12 +274,10 @@ else
     _completionTests_verifyCompletion "helm --kubecon" "--kubeconfig --kubeconfig --kubeconfig"
 fi
 if [ ! -z ${ROBOT_HELM_V3} ]; then
-    # _completionTests_verifyCompletion "helm -v" "-v"
+    _completionTests_verifyCompletion "helm -n" "-n"
     if [ "$SHELL_TYPE" = bash ]; then
-        # _completionTests_verifyCompletion "helm --v" "--v= --vmodule= --v --vmodule"
         _completionTests_verifyCompletion "helm --name" "--namespace= --namespace"
     else
-        # _completionTests_verifyCompletion "helm --v" "--v --vmodule --v --vmodule --v --vmodule"
         _completionTests_verifyCompletion "helm --name" "--namespace --namespace --namespace"
     fi
 fi
@@ -291,14 +286,6 @@ _completionTests_verifyCompletion "helm -" "$allHelmGlobalFlags"
 _completionTests_verifyCompletion "helm --" "$allHelmLongFlags"
 _completionTests_verifyCompletion "helm show -" "$allHelmGlobalFlags"
 _completionTests_verifyCompletion "helm show --" "$allHelmLongFlags"
-
-# if [ "$SHELL_TYPE" = bash ]; then
-#     _completionTests_verifyCompletion "helm --s" "--skip-headers --skip-log-headers --stderrthreshold --stderrthreshold="
-#     _completionTests_verifyCompletion "helm show --s" "--skip-headers --skip-log-headers --stderrthreshold --stderrthreshold="
-# else
-#     _completionTests_verifyCompletion "helm --s" "--skip-headers --skip-log-headers --stderrthreshold --stderrthreshold --stderrthreshold"
-#     _completionTests_verifyCompletion "helm show --s" "--skip-headers --skip-log-headers --stderrthreshold --stderrthreshold --stderrthreshold"
-# fi
 
 _completionTests_verifyCompletion "helm -n" "-n"
 _completionTests_verifyCompletion "helm show -n" "-n"
@@ -313,7 +300,7 @@ else
 fi
 if [ ! -z ${ROBOT_HELM_V3} ]; then
     _completionTests_verifyCompletion "helm --namespace mynamespace get h" "hooks"
-    _completionTests_verifyCompletion "helm -v 3 get " "all hooks manifest notes values"
+    _completionTests_verifyCompletion "helm -n mynamespace get " "all hooks manifest notes values"
     if [ "$SHELL_TYPE" = bash ]; then
         _completionTests_verifyCompletion "helm get --name" "--namespace= --namespace"
     else
@@ -470,7 +457,7 @@ if [ ! -z ${ROBOT_HELM_V3} ]; then
     _completionTests_verifyCompletion "helm upgrade release zz" "zztest1/ zztest2/ zztest2file"
     _completionTests_verifyCompletion "helm upgrade release nginx/n" "nginx/nginx nginx/nginx-test"
 
-    _completionTests_verifyCompletion "helm show values ngin" "nginx/ nginx/."
+    _completionTests_verifyCompletion "helm show values ngin" "nginx/"
 
     \rm $tmpFiles
 fi
