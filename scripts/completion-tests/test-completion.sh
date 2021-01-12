@@ -53,13 +53,6 @@ case $(uname) in
       ;;
 esac
 
-HELM_DIR=${SCRIPT_DIR}/../../.acceptance
-HELM_REPO=${HELM_DIR}/helm
-
-if [ -z $(which docker) ]; then
-  echo "Missing 'docker' client which is required for these tests";
-  exit 2;
-fi
 
 # Only use the -d flag for mktemp as many other flags don't
 # work on every plateform
