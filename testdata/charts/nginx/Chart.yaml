@@ -6,7 +6,7 @@ keywords:
 - nginx
 - www
 - web
-kubeVersion: '>=1.2.0'
+kubeVersion: '>=1.2.0-0'
 maintainers: []
 name: nginx
 sources:
