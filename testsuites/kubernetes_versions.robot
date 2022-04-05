@@ -31,7 +31,7 @@ Library           ../lib/ClusterProvider.py
 Library           ../lib/Kubectl.py
 Library           ../lib/Helm.py
 Library           ../lib/Sh.py
-Suite Setup       Suite Setup
+#Suite Setup       Suite Setup
 Suite Teardown    Suite Teardown
 
 
@@ -73,7 +73,7 @@ Create test cluster with kube version
 
 Verify --wait flag works as expected
     # Install nginx chart in a good state, using --wait flag
-    Sh.Run  helm delete wait-flag-good
+#    Sh.Run  helm delete wait-flag-good
     Helm.Install test chart    wait-flag-good    nginx   --wait --timeout=60s
     Helm.Return code should be  0
 
@@ -90,7 +90,7 @@ Verify --wait flag works as expected
 
     Kubectl.Pods with prefix are running    default    wait-flag-good-nginx-ext-    3
     Kubectl.Return code should be   0
-    Kubectl.Pods with prefix are running    default    wait-flag-good-nginx-fluentd-es-    1
+    Kubectl.Deamon Set Pods With Prefix    default    wait-flag-good-nginx-fluentd-es-    
     Kubectl.Return code should be   0
     Kubectl.Pods with prefix are running    default    wait-flag-good-nginx-v1-    3
     Kubectl.Return code should be   0
@@ -121,7 +121,7 @@ Verify --wait flag works as expected
 
     Kubectl.Pods with prefix are running    default    wait-flag-bad-nginx-ext-    3
     Kubectl.Return code should not be   0
-    Kubectl.Pods with prefix are running    default    wait-flag-bad-nginx-fluentd-es-    1
+    Kubectl.Deamon Set Pods With Prefix    default    wait-flag-bad-nginx-fluentd-es-    
     Kubectl.Return code should not be   0
     Kubectl.Pods with prefix are running    default    wait-flag-bad-nginx-v1-    3
     Kubectl.Return code should not be   0
