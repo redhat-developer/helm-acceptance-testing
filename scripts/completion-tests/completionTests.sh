@@ -207,6 +207,8 @@ allHelmCommands="completion create dependency env 2to3 help get history install 
 if [ "$SHELL_TYPE" = bash ]; then
     allHelmLongFlags="--burst-limit --debug --help --kube-apiserver --kube-as-group --kube-as-user --kube-ca-file --kube-context --kube-insecure-skip-tls-verify --kube-tls-server-name --kube-token --kubeconfig --namespace --qps --registry-config --repository-cache --repository-config"
     allHelmGlobalFlags="${allHelmLongFlags} -h -n"
+    allHelmLongTwoThreeFlags="--burst-limit --debug --kube-apiserver --kube-as-group --kube-as-user --kube-ca-file --kube-context --kube-insecure-skip-tls-verify --kube-tls-server-name --kube-token --kubeconfig --namespace --qps --registry-config --repository-cache --repository-config"
+    allHelmGlobalwoThreeFlags="${allHelmLongTwoThreeFlags} -h -n"
 else
     allHelmGlobalFlags="--debug --kube-apiserver --kube-apiserver --kube-apiserver --kube-context --kube-context --kube-context --kube-token --kube-token --kube-token --kubeconfig --kubeconfig --kubeconfig --namespace --namespace --namespace --registry-config --registry-config --registry-config --repository-cache --repository-cache --repository-cache --repository-config --repository-config --repository-config -n"
     allHelmLongFlags="--debug --kube-apiserver --kube-apiserver --kube-apiserver --kube-context --kube-context --kube-context --kube-token --kube-token --kube-token --kubeconfig --kubeconfig --kubeconfig --namespace --namespace --namespace --registry-config --registry-config --registry-config --repository-cache --repository-cache --repository-cache --repository-config --repository-config --repository-config "
@@ -325,12 +327,11 @@ _completionTests_verifyCompletion "helm 2to3 " "cleanup convert move"
 _completionTests_verifyCompletion "helm 2to3 c" "cleanup convert"
 _completionTests_verifyCompletion "helm 2to3 move " "config"
 
-_completionTests_verifyCompletion "helm 2to3 cleanup -" "$allHelmGlobalFlags -r -s --label --cleanup --storage"
+_completionTests_verifyCompletion "helm 2to3 cleanup -" "$allHelmGlobalwoThreeFlags -r -s --label --cleanup --storage"
 # For plugin completion, when there are more short flags than long flags, a long flag is created for the extra short flags
 # So here we expect the extra --t
-_completionTests_verifyCompletion "helm 2to3 convert -" "$allHelmGlobalFlags -l -s -t --t --label --storage"
-_completionTests_verifyCompletion "helm 2to3 move config --" "$allHelmLongFlags --dry-run"
-
+_completionTests_verifyCompletion "helm 2to3 convert -" "$allHelmGlobalwoThreeFlags -l -s -t --t --label --storage"
+_completionTests_verifyCompletion "helm 2to3 move config --" "$allHelmLongTwoThreeFlags --dry-run"
 #####################
 # Dynamic completions
 #####################
