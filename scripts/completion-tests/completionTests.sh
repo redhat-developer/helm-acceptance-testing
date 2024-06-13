@@ -208,7 +208,7 @@ if [ "$SHELL_TYPE" = bash ]; then
     allHelmLongFlags="--burst-limit --debug --help --kube-apiserver --kube-as-group --kube-as-user --kube-ca-file --kube-context --kube-insecure-skip-tls-verify --kube-tls-server-name --kube-token --kubeconfig --namespace --qps --registry-config --repository-cache --repository-config"
     allHelmGlobalFlags="${allHelmLongFlags} -h -n"
     allHelmLongTwoThreeFlags="--burst-limit --debug --kube-apiserver --kube-as-group --kube-as-user --kube-ca-file --kube-context --kube-insecure-skip-tls-verify --kube-tls-server-name --kube-token --kubeconfig --namespace --qps --registry-config --repository-cache --repository-config"
-    allHelmGlobalwoThreeFlags="${allHelmLongTwoThreeFlags} -h -n"
+    allHelmGlobalwoThreeFlags="${allHelmLongTwoThreeFlags} -n"
 else
     allHelmGlobalFlags="--debug --kube-apiserver --kube-apiserver --kube-apiserver --kube-context --kube-context --kube-context --kube-token --kube-token --kube-token --kubeconfig --kubeconfig --kubeconfig --namespace --namespace --namespace --registry-config --registry-config --registry-config --repository-cache --repository-cache --repository-cache --repository-config --repository-config --repository-config -n"
     allHelmLongFlags="--debug --kube-apiserver --kube-apiserver --kube-apiserver --kube-context --kube-context --kube-context --kube-token --kube-token --kube-token --kubeconfig --kubeconfig --kubeconfig --namespace --namespace --namespace --registry-config --registry-config --registry-config --repository-cache --repository-cache --repository-cache --repository-config --repository-config --repository-config "
